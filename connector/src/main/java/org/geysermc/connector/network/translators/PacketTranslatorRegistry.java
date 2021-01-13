@@ -51,6 +51,7 @@ public class PacketTranslatorRegistry<T> {
     private static final ObjectArrayList<Class<?>> IGNORED_PACKETS = new ObjectArrayList<>();
 
     public static final Map<BedrockPacket, Long> clientPackets = new LinkedHashMap<>();
+    public static boolean capture = false;
     private long lastPacket = -1;
     private final boolean server;
 
@@ -98,12 +99,14 @@ public class PacketTranslatorRegistry<T> {
         if (!session.getUpstream().isClosed() && !session.isClosed()) {
             try {
                 if (translators.containsKey(clazz)) {
-                    if (!server && lastPacket != -1) {
-                        long delay = System.currentTimeMillis() - lastPacket;
-                        lastPacket = System.currentTimeMillis();
-                        clientPackets.put((BedrockPacket) packet, delay);
-                    } else if (clazz == SetLocalPlayerAsInitializedPacket.class) {
-                        lastPacket = System.currentTimeMillis();
+                    if (capture) {
+                        if (!server && lastPacket != -1) {
+                            long delay = System.currentTimeMillis() - lastPacket;
+                            lastPacket = System.currentTimeMillis();
+                            clientPackets.put((BedrockPacket) packet, delay);
+                        } else if (clazz == SetLocalPlayerAsInitializedPacket.class) {
+                            lastPacket = System.currentTimeMillis();
+                        }
                     }
                     ((PacketTranslator<P>) translators.get(clazz)).translate(packet, session);
                     return true;

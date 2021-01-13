@@ -201,10 +201,10 @@ public class TestServerPacketHandler implements BedrockPacketHandler {
 
     boolean defaultHandler(BedrockPacket packet) {
         if((packet instanceof TextPacket)) {
-            if(((TextPacket) packet).getMessage().equals("End")) {
+            if("End".equals(((TextPacket) packet).getMessage())) {
                 lastReceived = true;
             }
-            else if(((TextPacket) packet).getMessage().equals("Start")) {
+            else if("Start".equals(((TextPacket) packet).getMessage())) {
                 lastReceived = false;
             }
         }

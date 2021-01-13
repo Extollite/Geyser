@@ -54,6 +54,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -77,8 +78,6 @@ public class PerformanceTest {
 
     private static Map<BedrockPacket, Long> clientPackets = new LinkedHashMap<>();
 
-    private static long captureTime = 0;
-
     @BeforeClass
     @SuppressWarnings("unchecked")
     public static void setUp() throws InterruptedException {
@@ -92,6 +91,8 @@ public class PerformanceTest {
             Thread.sleep(1000);
         }
 
+        PacketTranslatorRegistry.capture = true;
+
         while (GeyserConnector.getInstance().getPlayers().size() != 1) {
             Thread.sleep(1000);
         }
@@ -102,7 +103,7 @@ public class PerformanceTest {
             Thread.sleep(1000);
         }
 
-        captureTime = System.currentTimeMillis() - start;
+        long captureTime = System.currentTimeMillis() - start;
 
         GeyserConnector.getInstance().shutdown();
 
@@ -119,15 +120,16 @@ public class PerformanceTest {
 
         clientPackets = new LinkedHashMap<>(PacketTranslatorRegistry.clientPackets);
 
+        PacketTranslatorRegistry.capture = false;
+
         TextPacket endPacket = createTestPacket("End");
-        clientPackets.put(endPacket, 20L);
+        clientPackets.put(endPacket, 3L);
 
         System.out.println("Packets capture: " + clientPackets.size() + ".");
         System.out.println("Capture time: " + captureTime + "ms.");
     }
 
     @Test
-    @Ignore
     public void directClientConnection() throws Exception {
         BedrockServer server = new BedrockServer(new InetSocketAddress("0.0.0.0", 19132));
         TestServerEventHandler handler = new TestServerEventHandler();
@@ -140,7 +142,6 @@ public class PerformanceTest {
         TextPacket afterEndPacket = createTestPacket("");
 
         TextPacket startPacket = createTestPacket("Start");
-
 
         InetSocketAddress connectionAddress = new InetSocketAddress("127.0.0.1", 19132);
         client.connect(connectionAddress).join().setPacketCodec(BedrockProtocol.DEFAULT_BEDROCK_CODEC);
@@ -209,17 +210,16 @@ public class PerformanceTest {
         server.close();
 
         System.out.println(warmUpDirectClientConnectionTimes.stream()
-                .map(value -> new BigDecimal(value).setScale(9, RoundingMode.HALF_UP))
+                .map(BigDecimal::new)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .divide(new BigDecimal(2), RoundingMode.HALF_UP));
+                .divide(new BigDecimal(warmUpDirectClientConnectionTimes.size()), RoundingMode.HALF_UP));
         System.out.println(directClientConnectionTimes.stream()
-                .map(value -> new BigDecimal(value).setScale(9, RoundingMode.HALF_UP))
+                .map(BigDecimal::new)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .divide(new BigDecimal(2), RoundingMode.HALF_UP));
+                .divide(new BigDecimal(directClientConnectionTimes.size()), RoundingMode.HALF_UP));
     }
 
     @Test
-    @Ignore
     public void connectionViaGeyser() throws IOException, InterruptedException {
         Server javaServer = startJavaServer();
 
@@ -288,7 +288,6 @@ public class PerformanceTest {
                 Thread.sleep(0, 100);
             }
 
-
             long end = System.nanoTime();
 
             warmUpConnectionViaGeyserTimes.add(end - start);
@@ -327,13 +326,13 @@ public class PerformanceTest {
         connector.shutdown();
 
         System.out.println(warmUpConnectionViaGeyserTimes.stream()
-                .map(value -> new BigDecimal(value).setScale(9, RoundingMode.HALF_UP))
+                .map(BigDecimal::new)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .divide(new BigDecimal(2), RoundingMode.HALF_UP));
+                .divide(new BigDecimal(warmUpConnectionViaGeyserTimes.size()), RoundingMode.HALF_UP));
         System.out.println(connectionViaGeyserTimes.stream()
-                .map(value -> new BigDecimal(value).setScale(9, RoundingMode.HALF_UP))
+                .map(BigDecimal::new)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .divide(new BigDecimal(2), RoundingMode.HALF_UP));
+                .divide(new BigDecimal(connectionViaGeyserTimes.size()), RoundingMode.HALF_UP));
 
     }
 
@@ -365,7 +364,8 @@ public class PerformanceTest {
         }
 
         Map<Integer, List<BigDecimal>> averageTimes = new LinkedHashMap<>();
-        for (int i = 102; i < 200; i += 10) {
+        List<Integer> connections = Arrays.asList(20, 30, 40, 50, 80, 100, 120, 160, 200);
+        for (int i : connections) {
             List<List<Long>> times = new ArrayList<>();
             List<Thread> threads = new ArrayList<>();
             for (int j = 0; j < i; j++) {
