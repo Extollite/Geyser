@@ -23,33 +23,43 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.util.runnable;
+package org.geysermc.util.common.mock;
 
-import lombok.Getter;
+import org.geysermc.connector.configuration.GeyserJacksonConfiguration;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-@Getter
-public class PerformanceSpigotRunnable implements Runnable {
-    private BufferedWriter writer;
-    private boolean working = true;
+public class TestConfiguration extends GeyserJacksonConfiguration {
 
     @Override
-    public void run() {
-        try {
-            Process proc = Runtime.getRuntime().exec("java -jar paper-1.16.4.jar nogui", null, new File("/Users/extollite/Documents/GitHub/Geyser-test/test/spigot"));
-            working = true;
-            writer = new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
-            new BufferedReader(new InputStreamReader(proc.getInputStream())).lines().forEach(s -> System.out.println("[SPIGOT] " + s));
-            proc.waitFor();
-            working = false;
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-        }
+    public Path getFloodgateKeyPath() {
+        return Paths.get(".");
     }
+
+    @Override
+    public boolean isPassthroughMotd() {
+        return true;
+    }
+
+    @Override
+    public boolean isPassthroughPlayerCounts() {
+        return true;
+    }
+
+    @Override
+    public boolean isPassthroughProtocolName() {
+        return true;
+    }
+
+    @Override
+    public int getPingPassthroughInterval() {
+        return 1;
+    }
+
+    @Override
+    public String getDefaultLocale() {
+        return "en_us";
+    }
+
 }

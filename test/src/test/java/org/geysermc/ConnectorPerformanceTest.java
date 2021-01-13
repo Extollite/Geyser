@@ -40,13 +40,13 @@ import org.geysermc.connector.network.session.auth.AuthData;
 import org.geysermc.connector.network.session.auth.BedrockClientData;
 import org.geysermc.connector.network.translators.PacketTranslatorRegistry;
 import org.geysermc.platform.standalone.GeyserStandaloneBootstrap;
-import org.geysermc.util.adapter.PerformanceServerAdapter;
-import org.geysermc.util.adapter.UnderLoadServerAdapter;
-import org.geysermc.util.handler.PerformanceServerEventHandler;
-import org.geysermc.util.helper.BigDecimalResult;
-import org.geysermc.util.runnable.RandomJoinTestClientRunnable;
-import org.geysermc.util.runnable.PerformanceSpigotRunnable;
-import org.geysermc.util.runnable.UnderLoadTestClientRunnable;
+import org.geysermc.util.performancetest.adapter.PerformanceServerAdapter;
+import org.geysermc.util.performancetest.adapter.UnderLoadServerAdapter;
+import org.geysermc.util.performancetest.handler.PerformanceServerEventHandler;
+import org.geysermc.util.common.helper.BigDecimalResult;
+import org.geysermc.util.performancetest.runnable.RandomJoinTestClientRunnable;
+import org.geysermc.util.performancetest.runnable.SpigotRunnable;
+import org.geysermc.util.performancetest.runnable.UnderLoadTestClientRunnable;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -64,11 +64,11 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static org.geysermc.util.helper.TestHelper.createTestPacket;
-import static org.geysermc.util.helper.TestHelper.startBedrockClient;
-import static org.geysermc.util.helper.TestHelper.startGeyser;
-import static org.geysermc.util.helper.TestHelper.startGeyserUnderLoad;
-import static org.geysermc.util.helper.TestHelper.startJavaServer;
+import static org.geysermc.util.common.helper.TestHelper.createTestPacket;
+import static org.geysermc.util.common.helper.TestHelper.startBedrockClient;
+import static org.geysermc.util.common.helper.TestHelper.startGeyser;
+import static org.geysermc.util.common.helper.TestHelper.startGeyserUnderLoad;
+import static org.geysermc.util.common.helper.TestHelper.startJavaServer;
 
 public class ConnectorPerformanceTest {
     private static final int WARM_UP_ITERATIONS = 3;
@@ -83,7 +83,7 @@ public class ConnectorPerformanceTest {
     @BeforeClass
     @SuppressWarnings("unchecked")
     public static void setUp() throws InterruptedException {
-        PerformanceSpigotRunnable runnable = new PerformanceSpigotRunnable();
+        SpigotRunnable runnable = new SpigotRunnable();
         Thread spigotThread = new Thread(runnable, "spigot");
         spigotThread.start();
 

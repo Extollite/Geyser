@@ -23,43 +23,33 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.util.mock;
+package org.geysermc.util.performancetest.runnable;
 
-import org.geysermc.connector.configuration.GeyserJacksonConfiguration;
+import lombok.Getter;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
-public class TestConfiguration extends GeyserJacksonConfiguration {
-
-    @Override
-    public Path getFloodgateKeyPath() {
-        return Paths.get(".");
-    }
-
-    @Override
-    public boolean isPassthroughMotd() {
-        return true;
-    }
+@Getter
+public class SpigotRunnable implements Runnable {
+    private BufferedWriter writer;
+    private boolean working = true;
 
     @Override
-    public boolean isPassthroughPlayerCounts() {
-        return true;
+    public void run() {
+        try {
+            Process proc = Runtime.getRuntime().exec("java -jar paper-1.16.4.jar nogui", null, new File("/Users/extollite/Documents/GitHub/Geyser-test/test/spigot"));
+            working = true;
+            writer = new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
+            new BufferedReader(new InputStreamReader(proc.getInputStream())).lines().forEach(s -> System.out.println("[SPIGOT] " + s));
+            proc.waitFor();
+            working = false;
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
     }
-
-    @Override
-    public boolean isPassthroughProtocolName() {
-        return true;
-    }
-
-    @Override
-    public int getPingPassthroughInterval() {
-        return 1;
-    }
-
-    @Override
-    public String getDefaultLocale() {
-        return "en_us";
-    }
-
 }

@@ -23,7 +23,7 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.util.mock;
+package org.geysermc.util.performancetest.mock;
 
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import org.geysermc.connector.GeyserConnector;
@@ -34,12 +34,12 @@ import org.geysermc.connector.network.session.GeyserSession;
 
 import java.util.Map;
 
-public class PerformanceConnectorServerEventHandler extends ConnectorServerEventHandler {
+public class PerformanceConnectorEventHandler extends ConnectorServerEventHandler {
 
     private final Map<Integer, GeyserSession> sessions;
     private final GeyserConnector connector;
 
-    public PerformanceConnectorServerEventHandler(GeyserConnector connector, Map<Integer, GeyserSession> sessions) {
+    public PerformanceConnectorEventHandler(GeyserConnector connector, Map<Integer, GeyserSession> sessions) {
         super(connector);
         this.sessions = sessions;
         this.connector = connector;

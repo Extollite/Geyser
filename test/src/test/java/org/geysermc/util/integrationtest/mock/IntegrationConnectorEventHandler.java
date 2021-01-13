@@ -23,7 +23,7 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.util.mock;
+package org.geysermc.util.integrationtest.mock;
 
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import org.geysermc.connector.GeyserConnector;
@@ -34,12 +34,12 @@ import org.geysermc.connector.network.session.GeyserSession;
 
 import java.util.function.Consumer;
 
-public class IntegrationConnectorServerEventHandler extends ConnectorServerEventHandler {
+public class IntegrationConnectorEventHandler extends ConnectorServerEventHandler {
 
     private final Consumer<GeyserSession> sessionConsumer;
     private final GeyserConnector connector;
 
-    public IntegrationConnectorServerEventHandler(GeyserConnector connector, Consumer<GeyserSession> sessionConsumer) {
+    public IntegrationConnectorEventHandler(GeyserConnector connector, Consumer<GeyserSession> sessionConsumer) {
         super(connector);
         this.sessionConsumer = sessionConsumer;
         this.connector = connector;

@@ -23,20 +23,15 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.util.adapter;
+package org.geysermc.util.performancetest.adapter;
 
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
 import com.github.steveice10.packetlib.event.server.ServerAdapter;
 import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class PerformanceServerAdapter extends ServerAdapter {
-    private boolean lastReceived = false;
+public class UnderLoadServerAdapter extends ServerAdapter {
 
     @Override
     public void sessionAdded(SessionAddedEvent event) {
@@ -44,14 +39,8 @@ public class PerformanceServerAdapter extends ServerAdapter {
             @Override
             public void packetReceived(PacketReceivedEvent event) {
                 if (event.getPacket() instanceof ClientChatPacket) {
-                    switch (((ClientChatPacket) event.getPacket()).getMessage()) {
-                        case "End":
-                            lastReceived = true;
-                            break;
-                        case "Start":
-                            lastReceived = false;
-                        default:
-                            break;
+                    if ("End".equals(((ClientChatPacket) event.getPacket()).getMessage())) {
+                        event.getSession().disconnect("End");
                     }
                 }
             }

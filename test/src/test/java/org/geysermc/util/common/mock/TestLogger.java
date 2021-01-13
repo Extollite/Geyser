@@ -23,7 +23,7 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.util.mock;
+package org.geysermc.util.common.mock;
 
 import org.geysermc.connector.GeyserLogger;
 import org.geysermc.connector.command.CommandSender;

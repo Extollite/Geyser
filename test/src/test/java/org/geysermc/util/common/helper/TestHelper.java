@@ -23,7 +23,7 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.util.helper;
+package org.geysermc.util.common.helper;
 
 import com.github.steveice10.mc.auth.service.SessionService;
 import com.github.steveice10.mc.protocol.MinecraftConstants;
@@ -41,10 +41,10 @@ import org.geysermc.connector.configuration.GeyserJacksonConfiguration;
 import org.geysermc.connector.network.session.GeyserSession;
 import org.geysermc.connector.ping.GeyserLegacyPingPassthrough;
 import org.geysermc.connector.ping.IGeyserPingPassthrough;
-import org.geysermc.util.mock.PerformanceConnectorServerEventHandler;
-import org.geysermc.util.mock.TestConfiguration;
-import org.geysermc.util.mock.IntegrationConnectorServerEventHandler;
-import org.geysermc.util.mock.TestLogger;
+import org.geysermc.util.performancetest.mock.PerformanceConnectorEventHandler;
+import org.geysermc.util.common.mock.TestConfiguration;
+import org.geysermc.util.integrationtest.mock.IntegrationConnectorEventHandler;
+import org.geysermc.util.common.mock.TestLogger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -100,8 +100,8 @@ public class TestHelper {
         IGeyserPingPassthrough pingPassthrough = GeyserLegacyPingPassthrough.init(connector);
         when(connector.getBootstrap().getGeyserPingPassthrough()).thenReturn(pingPassthrough);
 
-        IntegrationConnectorServerEventHandler integrationConnectorServerEventHandler = new IntegrationConnectorServerEventHandler(connector, session::set);
-        connector.getBedrockServer().setHandler(integrationConnectorServerEventHandler);
+        IntegrationConnectorEventHandler integrationConnectorEventHandler = new IntegrationConnectorEventHandler(connector, session::set);
+        connector.getBedrockServer().setHandler(integrationConnectorEventHandler);
 
         return connector;
     }
@@ -131,7 +131,7 @@ public class TestHelper {
         IGeyserPingPassthrough pingPassthrough = GeyserLegacyPingPassthrough.init(connector);
         when(connector.getBootstrap().getGeyserPingPassthrough()).thenReturn(pingPassthrough);
 
-        PerformanceConnectorServerEventHandler testConnectorServerEventHandler = new PerformanceConnectorServerEventHandler(connector, sessions);
+        PerformanceConnectorEventHandler testConnectorServerEventHandler = new PerformanceConnectorEventHandler(connector, sessions);
         connector.getBedrockServer().setHandler(testConnectorServerEventHandler);
 
         return connector;
