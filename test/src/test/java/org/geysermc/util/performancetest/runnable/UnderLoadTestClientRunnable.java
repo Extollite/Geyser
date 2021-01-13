@@ -83,8 +83,10 @@ public class UnderLoadTestClientRunnable implements Runnable {
 
             session.authenticate("Test" + port);
 
-            Thread.sleep(100);
-
+            while (!session.getConnector().getPlayers().contains(session)) {
+                Thread.sleep(10);
+            }
+            
             long start = System.nanoTime();
 
             for (Map.Entry<BedrockPacket, Long> entry : clientPackets.entrySet()) {
