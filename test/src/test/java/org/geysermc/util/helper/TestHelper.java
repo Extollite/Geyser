@@ -158,8 +158,12 @@ public class TestHelper {
             } catch (Exception e) {
                 //System.out.println(e.getMessage());
             }
-
         }
     }
+
+    public static int randomJoinTime() {
+        return ThreadLocalRandom.current().nextInt(10000) + 100;
+    }
+
 
 }

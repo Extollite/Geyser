@@ -43,6 +43,8 @@ import org.geysermc.platform.standalone.GeyserStandaloneBootstrap;
 import org.geysermc.util.adapter.PerformanceServerAdapter;
 import org.geysermc.util.adapter.UnderLoadServerAdapter;
 import org.geysermc.util.handler.TestServerEventHandler;
+import org.geysermc.util.helper.BigDecimalResult;
+import org.geysermc.util.runnable.RandomJoinTestClientRunnable;
 import org.geysermc.util.runnable.UnderLoadTestClientRunnable;
 import org.geysermc.util.runnable.TestSpigotRunnable;
 import org.junit.BeforeClass;
@@ -389,6 +391,63 @@ public class PerformanceTest {
                     .collect(Collectors.toList());
             System.out.println(threadAverage);
             averageTimes.put(i, threadAverage);
+        }
+
+        System.out.println(averageTimes);
+
+        connector.shutdown();
+        javaServer.close();
+    }
+
+    @Test
+    public void underLoadTestRandomConnections() throws InterruptedException, IOException {
+        Server javaServer = startJavaServer();
+
+        UnderLoadServerAdapter adapter = new UnderLoadServerAdapter();
+
+        javaServer.addListener(adapter);
+
+        javaServer.bind();
+
+        Map<Integer, GeyserSession> sessions = new HashMap<>();
+        GeyserConnector connector = startGeyserUnderLoad(sessions);
+
+        List<Thread> warmUpThreads = new ArrayList<>();
+
+        for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
+            BigDecimalResult threadTime = new BigDecimalResult(BigDecimal.ZERO);
+            Runnable runnable = new RandomJoinTestClientRunnable(threadTime, clientPackets, sessions);
+            Thread clientThread = new Thread(runnable);
+            warmUpThreads.add(clientThread);
+            clientThread.start();
+        }
+
+        for (Thread thread : warmUpThreads) {
+            thread.join();
+        }
+
+        Map<Integer, BigDecimal> averageTimes = new LinkedHashMap<>();
+        for (int i = 102; i < 200; i += 10) {
+            List<BigDecimalResult> times = new ArrayList<>();
+            List<Thread> threads = new ArrayList<>();
+            for (int j = 0; j < i; j++) {
+                BigDecimalResult threadTime = new BigDecimalResult(BigDecimal.ZERO);
+                times.add(threadTime);
+                Runnable runnable = new RandomJoinTestClientRunnable(threadTime, clientPackets, sessions);
+                Thread clientThread = new Thread(runnable);
+                threads.add(clientThread);
+                clientThread.start();
+            }
+            for (Thread thread : threads) {
+                thread.join();
+            }
+            BigDecimal average = times.stream()
+                    .map(BigDecimalResult::getResultTime)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .divide(BigDecimal.valueOf(times.size()), RoundingMode.HALF_UP);
+
+            System.out.println(average);
+            averageTimes.put(i, average);
         }
 
         System.out.println(averageTimes);

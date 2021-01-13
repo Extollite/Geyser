@@ -36,28 +36,29 @@ import org.geysermc.connector.network.BedrockProtocol;
 import org.geysermc.connector.network.session.GeyserSession;
 import org.geysermc.connector.network.session.auth.AuthData;
 import org.geysermc.connector.network.session.auth.BedrockClientData;
+import org.geysermc.util.helper.BigDecimalResult;
 
+import java.math.BigDecimal;
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import static org.geysermc.util.helper.TestHelper.startBedrockClient;
+import static org.geysermc.util.helper.TestHelper.randomJoinTime;
 
 @AllArgsConstructor
-public class UnderLoadTestClientRunnable implements Runnable {
+public class RandomJoinTestClientRunnable implements Runnable {
     private final ObjectMapper JSON_MAPPER = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-    private static int TEST_ITERATIONS = 5;
 
-    private final List<Long> threadTime;
+    private final BigDecimalResult threadTime;
     private final Map<BedrockPacket, Long> clientPackets;
     private final Map<Integer, GeyserSession> sessions;
 
     @SneakyThrows
     @Override
     public void run() {
-        for (int i = 0; i < TEST_ITERATIONS; i++) {
+            Thread.sleep(randomJoinTime());
 
             BedrockClient client = startBedrockClient();
 
@@ -107,7 +108,6 @@ public class UnderLoadTestClientRunnable implements Runnable {
                 Thread.sleep(10);
             }
 
-            threadTime.add(end - start);
-        }
+            this.threadTime.setResultTime(BigDecimal.valueOf(end).subtract(BigDecimal.valueOf(start)));
     }
 }
