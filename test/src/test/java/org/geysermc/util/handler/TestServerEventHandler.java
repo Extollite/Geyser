@@ -25,7 +25,6 @@
 
 package org.geysermc.util.handler;
 
-import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.BedrockPong;
 import com.nukkitx.protocol.bedrock.BedrockServerEventHandler;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
@@ -35,8 +34,6 @@ import lombok.Getter;
 import org.geysermc.connector.network.BedrockProtocol;
 
 import java.net.InetSocketAddress;
-import java.util.List;
-import java.util.Map;
 
 @Getter
 public class TestServerEventHandler implements BedrockServerEventHandler {

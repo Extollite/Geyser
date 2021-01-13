@@ -44,8 +44,8 @@ public class TestSpigotRunnable implements Runnable {
         try {
             Process proc = Runtime.getRuntime().exec("java -jar paper-1.16.4.jar nogui", null, new File("/Users/extollite/Documents/GitHub/Geyser-test/test/spigot"));
             working = true;
-            writer =  new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
-            new BufferedReader(new InputStreamReader(proc.getInputStream())).lines().forEach(s -> System.out.println("[SPIGOT] "+s));
+            writer = new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
+            new BufferedReader(new InputStreamReader(proc.getInputStream())).lines().forEach(s -> System.out.println("[SPIGOT] " + s));
             proc.waitFor();
             working = false;
         } catch (InterruptedException | IOException e) {

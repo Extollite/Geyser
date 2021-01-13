@@ -43,18 +43,19 @@ public class PerformanceServerAdapter extends ServerAdapter {
         event.getSession().addListener(new SessionAdapter() {
             @Override
             public void packetReceived(PacketReceivedEvent event) {
-                if ((event.getPacket() instanceof ClientChatPacket)){
+                if (event.getPacket() instanceof ClientChatPacket) {
                     switch (((ClientChatPacket) event.getPacket()).getMessage()) {
-                        case "End" :
+                        case "End":
                             lastReceived = true;
                             break;
-                        case "Start" : lastReceived = false;
+                        case "Start":
+                            lastReceived = false;
                         default:
                             break;
                     }
+                }
             }
-        }
-    });
-}
+        });
+    }
 }
 

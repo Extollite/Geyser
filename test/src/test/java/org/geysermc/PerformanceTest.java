@@ -45,10 +45,9 @@ import org.geysermc.util.adapter.UnderLoadServerAdapter;
 import org.geysermc.util.handler.TestServerEventHandler;
 import org.geysermc.util.helper.BigDecimalResult;
 import org.geysermc.util.runnable.RandomJoinTestClientRunnable;
-import org.geysermc.util.runnable.UnderLoadTestClientRunnable;
 import org.geysermc.util.runnable.TestSpigotRunnable;
+import org.geysermc.util.runnable.UnderLoadTestClientRunnable;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -65,20 +64,21 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static org.geysermc.util.helper.TestHelper.*;
+import static org.geysermc.util.helper.TestHelper.createTestPacket;
+import static org.geysermc.util.helper.TestHelper.startBedrockClient;
+import static org.geysermc.util.helper.TestHelper.startGeyser;
+import static org.geysermc.util.helper.TestHelper.startGeyserUnderLoad;
+import static org.geysermc.util.helper.TestHelper.startJavaServer;
 
 public class PerformanceTest {
-    private final ObjectMapper JSON_MAPPER = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
     private static final int WARM_UP_ITERATIONS = 3;
     private static final int TEST_ITERATIONS = 5;
-
+    private static Map<BedrockPacket, Long> clientPackets = new LinkedHashMap<>();
+    private final ObjectMapper JSON_MAPPER = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     private final List<Long> warmUpDirectClientConnectionTimes = new ArrayList<>();
     private final List<Long> warmUpConnectionViaGeyserTimes = new ArrayList<>();
     private final List<Long> directClientConnectionTimes = new ArrayList<>();
     private final List<Long> connectionViaGeyserTimes = new ArrayList<>();
-
-    private static Map<BedrockPacket, Long> clientPackets = new LinkedHashMap<>();
 
     @BeforeClass
     @SuppressWarnings("unchecked")
@@ -383,10 +383,10 @@ public class PerformanceTest {
             }
             List<BigDecimal> threadAverage = times.stream()
                     .map(
-                        threadTimes -> threadTimes.stream()
-                                .map(BigDecimal::new)
-                                .reduce(BigDecimal.ZERO, BigDecimal::add)
-                                .divide(new BigDecimal(threadTimes.size()), RoundingMode.HALF_UP)
+                            threadTimes -> threadTimes.stream()
+                                    .map(BigDecimal::new)
+                                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                                    .divide(new BigDecimal(threadTimes.size()), RoundingMode.HALF_UP)
                     )
                     .collect(Collectors.toList());
             System.out.println(threadAverage);
@@ -427,7 +427,8 @@ public class PerformanceTest {
         }
 
         Map<Integer, BigDecimal> averageTimes = new LinkedHashMap<>();
-        for (int i = 102; i < 200; i += 10) {
+        List<Integer> connections = Arrays.asList(20, 30, 40, 50, 80, 100, 120, 160, 200);
+        for (int i : connections) {
             List<BigDecimalResult> times = new ArrayList<>();
             List<Thread> threads = new ArrayList<>();
             for (int j = 0; j < i; j++) {

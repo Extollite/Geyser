@@ -46,8 +46,8 @@ import org.geysermc.connector.network.BedrockProtocol;
 import org.geysermc.connector.network.session.GeyserSession;
 import org.geysermc.connector.network.session.auth.AuthData;
 import org.geysermc.connector.network.session.auth.BedrockClientData;
-import org.geysermc.util.handler.TestClientPacketHandler;
 import org.geysermc.util.adapter.TestServerAdapter;
+import org.geysermc.util.handler.TestClientPacketHandler;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -46,10 +46,8 @@ import static org.geysermc.util.helper.TestHelper.startBedrockClient;
 
 @AllArgsConstructor
 public class UnderLoadTestClientRunnable implements Runnable {
+    private static final int TEST_ITERATIONS = 5;
     private final ObjectMapper JSON_MAPPER = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-    private static int TEST_ITERATIONS = 5;
-
     private final List<Long> threadTime;
     private final Map<BedrockPacket, Long> clientPackets;
     private final Map<Integer, GeyserSession> sessions;

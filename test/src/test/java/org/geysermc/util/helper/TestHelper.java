@@ -43,8 +43,8 @@ import org.geysermc.connector.ping.GeyserLegacyPingPassthrough;
 import org.geysermc.connector.ping.IGeyserPingPassthrough;
 import org.geysermc.util.mock.PerformanceConnectorServerEventHandler;
 import org.geysermc.util.mock.TestConfiguration;
-import org.geysermc.util.mock.TestLogger;
 import org.geysermc.util.mock.TestConnectorServerEventHandler;
+import org.geysermc.util.mock.TestLogger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -137,7 +137,7 @@ public class TestHelper {
         return connector;
     }
 
-    public static TextPacket createTestPacket (String message) {
+    public static TextPacket createTestPacket(String message) {
         TextPacket textPacket = new TextPacket();
         textPacket.setMessage(message);
         textPacket.setType(TextPacket.Type.ANNOUNCEMENT);

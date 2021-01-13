@@ -33,7 +33,6 @@ import org.geysermc.connector.network.UpstreamPacketHandler;
 import org.geysermc.connector.network.session.GeyserSession;
 
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class PerformanceConnectorServerEventHandler extends ConnectorServerEventHandler {
 

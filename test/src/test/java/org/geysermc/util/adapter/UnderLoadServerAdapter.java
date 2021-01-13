@@ -30,8 +30,6 @@ import com.github.steveice10.packetlib.event.server.ServerAdapter;
 import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
-import lombok.Getter;
-import lombok.Setter;
 
 public class UnderLoadServerAdapter extends ServerAdapter {
 

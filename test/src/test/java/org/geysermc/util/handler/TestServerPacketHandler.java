@@ -189,7 +189,6 @@ import com.nukkitx.protocol.bedrock.packet.UpdateTradePacket;
 import com.nukkitx.protocol.bedrock.packet.VideoStreamConnectPacket;
 import lombok.Getter;
 import lombok.Setter;
-import org.w3c.dom.Text;
 
 @Getter
 @Setter
@@ -200,11 +199,10 @@ public class TestServerPacketHandler implements BedrockPacketHandler {
     }
 
     boolean defaultHandler(BedrockPacket packet) {
-        if((packet instanceof TextPacket)) {
-            if("End".equals(((TextPacket) packet).getMessage())) {
+        if ((packet instanceof TextPacket)) {
+            if ("End".equals(((TextPacket) packet).getMessage())) {
                 lastReceived = true;
-            }
-            else if("Start".equals(((TextPacket) packet).getMessage())) {
+            } else if ("Start".equals(((TextPacket) packet).getMessage())) {
                 lastReceived = false;
             }
         }
