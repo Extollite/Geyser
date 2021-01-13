@@ -42,10 +42,10 @@ import org.geysermc.connector.network.translators.PacketTranslatorRegistry;
 import org.geysermc.platform.standalone.GeyserStandaloneBootstrap;
 import org.geysermc.util.adapter.PerformanceServerAdapter;
 import org.geysermc.util.adapter.UnderLoadServerAdapter;
-import org.geysermc.util.handler.TestServerEventHandler;
+import org.geysermc.util.handler.PerformanceServerEventHandler;
 import org.geysermc.util.helper.BigDecimalResult;
 import org.geysermc.util.runnable.RandomJoinTestClientRunnable;
-import org.geysermc.util.runnable.TestSpigotRunnable;
+import org.geysermc.util.runnable.PerformanceSpigotRunnable;
 import org.geysermc.util.runnable.UnderLoadTestClientRunnable;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -70,7 +70,7 @@ import static org.geysermc.util.helper.TestHelper.startGeyser;
 import static org.geysermc.util.helper.TestHelper.startGeyserUnderLoad;
 import static org.geysermc.util.helper.TestHelper.startJavaServer;
 
-public class PerformanceTest {
+public class ConnectorPerformanceTest {
     private static final int WARM_UP_ITERATIONS = 3;
     private static final int TEST_ITERATIONS = 5;
     private static Map<BedrockPacket, Long> clientPackets = new LinkedHashMap<>();
@@ -83,7 +83,7 @@ public class PerformanceTest {
     @BeforeClass
     @SuppressWarnings("unchecked")
     public static void setUp() throws InterruptedException {
-        TestSpigotRunnable runnable = new TestSpigotRunnable();
+        PerformanceSpigotRunnable runnable = new PerformanceSpigotRunnable();
         Thread spigotThread = new Thread(runnable, "spigot");
         spigotThread.start();
 
@@ -134,7 +134,7 @@ public class PerformanceTest {
     @Test
     public void directClientConnection() throws Exception {
         BedrockServer server = new BedrockServer(new InetSocketAddress("0.0.0.0", 19132));
-        TestServerEventHandler handler = new TestServerEventHandler();
+        PerformanceServerEventHandler handler = new PerformanceServerEventHandler();
         server.setHandler(handler);
 
         server.bind().join();

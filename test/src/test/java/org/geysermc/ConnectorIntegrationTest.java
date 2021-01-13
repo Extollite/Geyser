@@ -46,8 +46,8 @@ import org.geysermc.connector.network.BedrockProtocol;
 import org.geysermc.connector.network.session.GeyserSession;
 import org.geysermc.connector.network.session.auth.AuthData;
 import org.geysermc.connector.network.session.auth.BedrockClientData;
-import org.geysermc.util.adapter.TestServerAdapter;
-import org.geysermc.util.handler.TestClientPacketHandler;
+import org.geysermc.util.adapter.IntegrationServerAdapter;
+import org.geysermc.util.handler.IntegrationClientPacketHandler;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -107,8 +107,8 @@ public class ConnectorIntegrationTest {
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
 
-        TestClientPacketHandler testClientPacketHandler = new TestClientPacketHandler();
-        client.getSession().setPacketHandler(testClientPacketHandler);
+        IntegrationClientPacketHandler integrationClientPacketHandler = new IntegrationClientPacketHandler();
+        client.getSession().setPacketHandler(integrationClientPacketHandler);
 
         testSession.send(packet2);
 
@@ -118,14 +118,14 @@ public class ConnectorIntegrationTest {
         javaServer.close();
         client.close();
 
-        assertEquals(testClientPacketHandler.getChatMessage(), Collections.singletonList("Test"));
+        assertEquals(integrationClientPacketHandler.getChatMessage(), Collections.singletonList("Test"));
     }
 
     @Test
     public void passFromClientToServer() throws IOException, InterruptedException {
         Server javaServer = startJavaServer();
 
-        TestServerAdapter serverAdapter = new TestServerAdapter();
+        IntegrationServerAdapter serverAdapter = new IntegrationServerAdapter();
 
         javaServer.addListener(serverAdapter);
 

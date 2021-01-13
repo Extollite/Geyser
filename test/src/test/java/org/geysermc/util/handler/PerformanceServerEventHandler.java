@@ -36,10 +36,10 @@ import org.geysermc.connector.network.BedrockProtocol;
 import java.net.InetSocketAddress;
 
 @Getter
-public class TestServerEventHandler implements BedrockServerEventHandler {
-    private TestServerPacketHandler packetHandler;
+public class PerformanceServerEventHandler implements BedrockServerEventHandler {
+    private PerformanceServerPacketHandler packetHandler;
 
-    public TestServerEventHandler() {
+    public PerformanceServerEventHandler() {
     }
 
     @Override
@@ -64,7 +64,7 @@ public class TestServerEventHandler implements BedrockServerEventHandler {
     @Override
     public void onSessionCreation(BedrockServerSession bedrockServerSession) {
         bedrockServerSession.setLogging(true);
-        packetHandler = new TestServerPacketHandler();
+        packetHandler = new PerformanceServerPacketHandler();
         bedrockServerSession.setPacketHandler(packetHandler);
         // Set the packet codec to default just in case we need to send disconnect packets.
         bedrockServerSession.setPacketCodec(BedrockProtocol.DEFAULT_BEDROCK_CODEC);

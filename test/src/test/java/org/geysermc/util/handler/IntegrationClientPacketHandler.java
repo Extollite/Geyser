@@ -23,33 +23,24 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.util.runnable;
+package org.geysermc.util.handler;
 
+import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
+import com.nukkitx.protocol.bedrock.packet.TextPacket;
 import lombok.Getter;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-public class TestSpigotRunnable implements Runnable {
-    private BufferedWriter writer;
-    private boolean working = true;
+public class IntegrationClientPacketHandler implements BedrockPacketHandler {
+    private final List<String> chatMessage = new ArrayList<>();
 
     @Override
-    public void run() {
-        try {
-            Process proc = Runtime.getRuntime().exec("java -jar paper-1.16.4.jar nogui", null, new File("/Users/extollite/Documents/GitHub/Geyser-test/test/spigot"));
-            working = true;
-            writer = new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
-            new BufferedReader(new InputStreamReader(proc.getInputStream())).lines().forEach(s -> System.out.println("[SPIGOT] " + s));
-            proc.waitFor();
-            working = false;
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-        }
+    public boolean handle(TextPacket textPacket) {
+        System.out.println(textPacket);
+        chatMessage.add(textPacket.getMessage());
+        return true;
     }
+
 }

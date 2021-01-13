@@ -43,7 +43,7 @@ import org.geysermc.connector.ping.GeyserLegacyPingPassthrough;
 import org.geysermc.connector.ping.IGeyserPingPassthrough;
 import org.geysermc.util.mock.PerformanceConnectorServerEventHandler;
 import org.geysermc.util.mock.TestConfiguration;
-import org.geysermc.util.mock.TestConnectorServerEventHandler;
+import org.geysermc.util.mock.IntegrationConnectorServerEventHandler;
 import org.geysermc.util.mock.TestLogger;
 
 import java.io.IOException;
@@ -100,8 +100,8 @@ public class TestHelper {
         IGeyserPingPassthrough pingPassthrough = GeyserLegacyPingPassthrough.init(connector);
         when(connector.getBootstrap().getGeyserPingPassthrough()).thenReturn(pingPassthrough);
 
-        TestConnectorServerEventHandler testConnectorServerEventHandler = new TestConnectorServerEventHandler(connector, session::set);
-        connector.getBedrockServer().setHandler(testConnectorServerEventHandler);
+        IntegrationConnectorServerEventHandler integrationConnectorServerEventHandler = new IntegrationConnectorServerEventHandler(connector, session::set);
+        connector.getBedrockServer().setHandler(integrationConnectorServerEventHandler);
 
         return connector;
     }

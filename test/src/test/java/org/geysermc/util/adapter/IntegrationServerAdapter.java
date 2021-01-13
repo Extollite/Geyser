@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class TestServerAdapter extends ServerAdapter {
+public class IntegrationServerAdapter extends ServerAdapter {
     private final List<String> chatMessage = new ArrayList<>();
 
     @Override

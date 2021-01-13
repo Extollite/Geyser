@@ -192,10 +192,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TestServerPacketHandler implements BedrockPacketHandler {
+public class PerformanceServerPacketHandler implements BedrockPacketHandler {
     private boolean lastReceived = false;
 
-    public TestServerPacketHandler() {
+    public PerformanceServerPacketHandler() {
     }
 
     boolean defaultHandler(BedrockPacket packet) {

@@ -34,12 +34,12 @@ import org.geysermc.connector.network.session.GeyserSession;
 
 import java.util.function.Consumer;
 
-public class TestConnectorServerEventHandler extends ConnectorServerEventHandler {
+public class IntegrationConnectorServerEventHandler extends ConnectorServerEventHandler {
 
     private final Consumer<GeyserSession> sessionConsumer;
     private final GeyserConnector connector;
 
-    public TestConnectorServerEventHandler(GeyserConnector connector, Consumer<GeyserSession> sessionConsumer) {
+    public IntegrationConnectorServerEventHandler(GeyserConnector connector, Consumer<GeyserSession> sessionConsumer) {
         super(connector);
         this.sessionConsumer = sessionConsumer;
         this.connector = connector;
