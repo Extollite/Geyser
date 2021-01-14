@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Getter
 public class SpigotRunnable implements Runnable {
@@ -42,7 +44,8 @@ public class SpigotRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            Process proc = Runtime.getRuntime().exec("java -jar paper-1.16.4.jar nogui", null, new File("/Users/extollite/Documents/GitHub/Geyser-test/test/spigot"));
+            Path spigotPath = Paths.get("spigot\\");
+            Process proc = Runtime.getRuntime().exec("java -jar spigot-1.16.4.jar nogui", null, spigotPath.toAbsolutePath().toFile());
             working = true;
             writer = new BufferedWriter(new OutputStreamWriter(proc.getOutputStream()));
             new BufferedReader(new InputStreamReader(proc.getInputStream())).lines().forEach(s -> System.out.println("[SPIGOT] " + s));

@@ -34,6 +34,7 @@ import com.nukkitx.protocol.bedrock.BedrockServer;
 import com.nukkitx.protocol.bedrock.packet.ResourcePackClientResponsePacket;
 import com.nukkitx.protocol.bedrock.packet.TextPacket;
 import org.geysermc.connector.GeyserConnector;
+import org.geysermc.connector.common.AuthType;
 import org.geysermc.connector.network.BedrockProtocol;
 import org.geysermc.connector.network.session.GeyserSession;
 import org.geysermc.connector.network.session.auth.AuthData;
@@ -48,6 +49,7 @@ import org.geysermc.util.performancetest.runnable.RandomJoinTestClientRunnable;
 import org.geysermc.util.performancetest.runnable.SpigotRunnable;
 import org.geysermc.util.performancetest.runnable.UnderLoadTestClientRunnable;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -92,6 +94,8 @@ public class ConnectorPerformanceTest {
         while (GeyserConnector.getInstance() == null) {
             Thread.sleep(1000);
         }
+
+        GeyserConnector.getInstance().setAuthType(AuthType.OFFLINE);
 
         PacketTranslatorRegistry.capture = true;
 
@@ -338,7 +342,7 @@ public class ConnectorPerformanceTest {
 
     }
 
-    @Test
+    @Ignore
     public void underLoadTest() throws InterruptedException, IOException {
         Server javaServer = startJavaServer();
 
@@ -351,22 +355,13 @@ public class ConnectorPerformanceTest {
         Map<Integer, GeyserSession> sessions = new HashMap<>();
         GeyserConnector connector = startGeyserUnderLoad(sessions);
 
-        List<Thread> warmUpThreads = new ArrayList<>();
-
-        for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-            List<Long> threadTime = new ArrayList<>();
-            Runnable runnable = new UnderLoadTestClientRunnable(threadTime, clientPackets, sessions);
-            Thread clientThread = new Thread(runnable);
-            warmUpThreads.add(clientThread);
-            clientThread.start();
-        }
-
-        for (Thread thread : warmUpThreads) {
-            thread.join();
-        }
+        Runnable warmpupRunnable = new UnderLoadTestClientRunnable(new ArrayList<>(), clientPackets, sessions);
+        Thread warmupThread = new Thread(warmpupRunnable);
+        warmupThread.start();
+        warmupThread.join();
 
         Map<Integer, List<BigDecimal>> averageTimes = new LinkedHashMap<>();
-        List<Integer> connections = Arrays.asList(20, 30, 40, 50, 80, 100, 120, 160, 200);
+        List<Integer> connections = Arrays.asList(40, 50, 80, 100, 120, 160, 200);
         for (int i : connections) {
             List<List<Long>> times = new ArrayList<>();
             List<Thread> threads = new ArrayList<>();
@@ -380,6 +375,9 @@ public class ConnectorPerformanceTest {
             }
             for (Thread thread : threads) {
                 thread.join();
+            }
+            if(times.size() == 0) {
+                continue;
             }
             List<BigDecimal> threadAverage = times.stream()
                     .map(
@@ -441,6 +439,9 @@ public class ConnectorPerformanceTest {
             }
             for (Thread thread : threads) {
                 thread.join();
+            }
+            if(times.size() == 0) {
+                continue;
             }
             BigDecimal average = times.stream()
                     .map(BigDecimalResult::getResultTime)

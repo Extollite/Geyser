@@ -83,9 +83,7 @@ public class UnderLoadTestClientRunnable implements Runnable {
 
             session.authenticate("Test" + port);
 
-            while (!session.getConnector().getPlayers().contains(session)) {
-                Thread.sleep(10);
-            }
+            Thread.sleep(200);
             
             long start = System.nanoTime();
 
